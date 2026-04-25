@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BackButton } from "@/components/BackButton";
 import { Chrome } from "@/components/Chrome";
 import { OculeLogo } from "@/components/OculeLogo";
 import { AboutModal } from "@/components/AboutModal";
 import { PasteView } from "@/components/PasteView";
+import { PlayPauseButton } from "@/components/PlayPauseButton";
 import { ReaderView } from "@/components/ReaderView";
 import { useAmbientAudio } from "@/hooks/useAmbientAudio";
 import { useAutoHide } from "@/hooks/useAutoHide";
@@ -76,6 +78,12 @@ function App() {
     onIndexChange: handleIndexChange,
   });
 
+  const onBack = useCallback(() => {
+    setSession({ text, index, wpm, updatedAt: Date.now() });
+    setView("paste");
+    pause();
+  }, [text, index, wpm, setSession, pause]);
+
   const lastSpaceRef = useRef(0);
   const scrubDirRef = useRef(0);
 
@@ -116,9 +124,7 @@ function App() {
         return;
       }
       if (e.key === "Escape") {
-        setSession({ text, index, wpm, updatedAt: Date.now() });
-        setView("paste");
-        pause();
+        onBack();
         return;
       }
       if (e.key === "ArrowLeft") {
@@ -224,7 +230,7 @@ function App() {
   }, [session]);
 
   return (
-    <div className="app">
+    <div className="app" data-view={view}>
       <Chrome
         visible={view === "paste" ? true : chromeVisible}
         wpm={wpm}
@@ -236,6 +242,16 @@ function App() {
         visible={view === "paste" ? true : chromeVisible}
         onAboutClick={() => setAboutOpen(true)}
       />
+      {view === "reader" && (
+        <BackButton onBack={onBack} visible={chromeVisible} />
+      )}
+      {view === "reader" && (
+        <PlayPauseButton
+          playing={playing}
+          onToggle={toggle}
+          visible={!playing || chromeVisible}
+        />
+      )}
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
 
       {view === "paste" && (

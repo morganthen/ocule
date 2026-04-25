@@ -264,7 +264,7 @@
 .paused-hint {
   position: absolute;
   left: 50%;
-  top: calc(40% + 7em);
+  top: calc(40% + 170px);
   transform: translate(-50%, -50%);
   font-size: 12px;
   letter-spacing: 0.2em;
@@ -553,6 +553,59 @@
   color: var(--text);
   background: var(--bg-elevated);
 }
+
+/* ─── Back button (left margin, aligned with reader word) ────────────────── */
+.back-btn {
+  position: fixed;
+  top: 40%;
+  left: 28px;
+  transform: translateY(-50%);
+  z-index: 9;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--text-faded);
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 300ms var(--ease), color 150ms var(--ease), background 150ms var(--ease);
+  cursor: pointer;
+}
+.back-btn.visible { opacity: 0.9; }
+.back-btn:hover {
+  color: var(--text);
+  background: var(--bg-elevated);
+  opacity: 1;
+}
+
+/* ─── Play/pause button (bottom-center of reader) ────────────────────────── */
+.playpause {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--text-faded);
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 300ms var(--ease), color 150ms var(--ease), border-color 150ms var(--ease), transform 150ms var(--ease);
+  cursor: pointer;
+}
+.playpause.visible { opacity: 0.85; }
+.playpause:hover {
+  color: var(--text);
+  border-color: var(--text-faded);
+  opacity: 1;
+}
+.playpause:active { transform: translateX(-50%) scale(0.96); }
 
 /* ─── Settings popover ───────────────────────────────────────────────────── */
 .settings-pop {
@@ -940,4 +993,6 @@
   .anchor-top    { top: -4.5em; }
   .anchor-bottom { top:  3.5em; }
   .esc-hint { display: none; }
+  .back-btn { left: 16px; width: 40px; height: 40px; }
+  .playpause { bottom: 56px; width: 56px; height: 56px; }
 }
