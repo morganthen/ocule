@@ -1,0 +1,72 @@
+/* Dark library — default */
+:root,
+:root[data-theme="dark"] {
+  --bg: #14110F;
+  --bg-elevated: #1A1613;
+  --text: #E8E3DB;
+  --text-dim: #A8A096;
+  --text-faded: #7A7064;
+  --orp: #D4A574;
+  --accent: #6B8E7F;
+  --rule: #2A2420;
+}
+
+:root[data-theme="light"] {
+  --bg: #F5F1E8;
+  --bg-elevated: #EDE7D9;
+  --text: #2A2520;
+  --text-dim: #4A4138;
+  --text-faded: #8A7F6F;
+  --orp: #8B2E2E;
+  --accent: #3E5D4E;
+  --rule: #D4CDBE;
+}
+
+:root {
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --font-mono: "Monaspace Xenon", "Berkeley Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --font-serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-humanist: "Literata", "Iowan Old Style", "Hoefler Text", Charter, Georgia, serif;
+  --font-dyslexic: "OpenDyslexic", "Comic Sans MS", "Trebuchet MS", sans-serif;
+  --font-app: var(--font-mono);
+  --font-size-scale: 1;
+}
+
+:root[data-font="mono"]     { --font-app: var(--font-mono); }
+:root[data-font="serif"]    { --font-app: var(--font-serif); }
+:root[data-font="sans"]     { --font-app: var(--font-sans); }
+:root[data-font="humanist"] { --font-app: var(--font-humanist); }
+:root[data-font="dyslexic"] { --font-app: var(--font-dyslexic); }
+
+@font-face {
+  font-family: "Monaspace Xenon";
+  src: url("https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceXenon-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Monaspace Xenon";
+  src: url("https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceXenon-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Monaspace Xenon";
+  src: url("https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceXenon-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.2.5/files/opendyslexic-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.2.5/files/opendyslexic-latin-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
