@@ -5,9 +5,15 @@ interface ContextViewProps {
   tokens: Token[]
   index: number
   onSeek?: (i: number) => void
+  flow?: 'paused' | 'playing'
 }
 
-export function ContextView({ tokens, index, onSeek }: ContextViewProps) {
+export function ContextView({
+  tokens,
+  index,
+  onSeek,
+  flow = 'paused',
+}: ContextViewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLSpanElement>(null)
   const firstRunRef = useRef(true)
@@ -35,23 +41,33 @@ export function ContextView({ tokens, index, onSeek }: ContextViewProps) {
 
     const cRect = c.getBoundingClientRect()
     const eRect = el.getBoundingClientRect()
-    const margin = cRect.height * 0.3
+
+    // Guided playback anchors the highlight lower in the viewport so the
+    // user reads downward into upcoming text; paused mode centers it.
+    const anchorRatio = flow === 'playing' ? 0.62 : 0.5
+    const topMargin = flow === 'playing' ? cRect.height * 0.4 : cRect.height * 0.3
+    const bottomMargin = cRect.height * 0.25
 
     const outOfZone =
-      eRect.top < cRect.top + margin || eRect.bottom > cRect.bottom - margin
+      eRect.top < cRect.top + topMargin ||
+      eRect.bottom > cRect.bottom - bottomMargin
 
     if (firstRunRef.current || outOfZone) {
-      const target = el.offsetTop - c.clientHeight / 2 + el.offsetHeight / 2
+      const target =
+        el.offsetTop - c.clientHeight * anchorRatio + el.offsetHeight / 2
       c.scrollTo({
         top: target,
         behavior: firstRunRef.current ? 'auto' : 'smooth',
       })
       firstRunRef.current = false
     }
-  }, [index, paragraphs])
+  }, [index, paragraphs, flow])
 
   return (
-    <div className="context-view" ref={containerRef}>
+    <div
+      className={'context-view context-' + flow}
+      ref={containerRef}
+    >
       <div className="context-inner">
         {paragraphs.map(({ items, startIdx }, pi) => (
           <p key={pi} className="context-para">

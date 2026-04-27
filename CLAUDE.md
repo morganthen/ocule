@@ -67,22 +67,25 @@ src/
 - Dark default: warm near-black `#14110F` bg, soft off-white `#E8E3DB` text, **amber `#D4A574` ORP** (lamplight, never red), sage `#6B8E7F` accent
 - Light: aged-paper `#F5F1E8` bg, dark `#2A2520` text, **deep burgundy `#8B2E2E` ORP**, forest `#3E5D4E` accent
 
-**Typography: Monaspace Xenon** monospace-serif (loaded from jsDelivr). The font picker for serif/sans/humanist/dyslexic was **removed** but the type definition, CSS rules, and `@font-face` for OpenDyslexic are intentionally left in `Settings.font`, `tokens.css`, and `components.css` as dead-but-revivable code. **Don't delete.**
+**Typography:** default is **Monaspace Xenon** monospace-serif (loaded from jsDelivr). The font picker (mono / serif / sans / humanist / dyslexic) is **live** in `SettingsPopover` — `App.tsx` writes `data-font` from `settings.font`, and `tokens.css` remaps `--font-app` per `[data-font]` selector. Reading surfaces (`WordDisplay`, `ContextView`) inherit via `var(--font-app)` so they follow the picker.
 
 **Motion:** all transitions 30–280ms, easing `cubic-bezier(0.4, 0, 0.2, 1)`. Library-quiet — no springs, no bounces.
 
 ## Locked product decisions (don't reverse without asking)
 
-- **Mono-only fonts.** `App.tsx` hardcodes `data-font="mono"` regardless of `settings.font`. The picker UI is gone.
+- **Two reading modes.** `Settings.mode` is `'rsvp' | 'guided'`. RSVP is the original word-at-anchor display. Guided plays the same `useRSVP` clock over the `ContextView` — highlight moves through a scrollable wall of text, top-mask fades the read text. Mode toggle lives in the WPM hover panel; an inline `· guided` tag appears next to the WPM number when not in default mode. RSVP-only knobs (peripheral context, word animation, word-size and peripheral-size sliders) are hidden in guided mode. Font and font size apply to both modes — `App.tsx` writes `data-font` and `data-font-size` on `<html>`, and `tokens.css` maps them to `--font-app` / `--context-text-size`.
+- **Font picker is live.** Reading surfaces use `var(--font-app)`. The ORP anchor math in `components.css` (`.word-after` at `calc(var(--anchor-x) + 1ch)`) still assumes monospace — switching fonts subtly breaks anchor stability for non-mono choices in RSVP mode. The user has accepted that tradeoff to keep the picker.
 - **Ramp-down only at punctuation.** `tokenize.ts` distributes `pauseWeight` to the 2 tokens *before* a punctuation. There is no `OUT` window — the reader snaps back to peak WPM on the very next word. The user explicitly removed the ramp-up.
 - **Word layout uses `calc(var(--anchor-x) + 1ch)` for `.word-after`.** This only works correctly for monospace. An attempt to make it font-agnostic broke vertical alignment between the current word and peripheral context. The user vetoed the refactor. **Don't try again unless asked.**
 - **`wpm` lives in `settings`, not local state.** Persists across refreshes. Session resume overrides it with the session's saved wpm so the user picks up at the same speed they left.
 - **Punctuation pause slider is inverted.** Left = more pause (slower), right = less pause (faster). Implemented in `ChromeSlider`'s `invert` prop via `inner = min + max - value`.
+- **Transport cluster is always visible.** The bottom-center rewind / play-pause / forward row in `PlayPauseButton.tsx` does *not* fade with chrome auto-hide — on mobile it is the only obvious "tap to pause" target. Don't reintroduce the fade.
+- **Double-tap arrow → ±10 jump only while playing.** Spacebar is a plain toggle (no double-tap rewind, which used to flash the context view). Arrow double-tap detection is gated on `playingRef.current`; in paused mode arrows just nudge by 1.
 
 ## Defaults for first-time visitors
 
 In `src/types.ts > DEFAULT_SETTINGS`:
-- theme: `light`, font: `mono`, fontSize: `large`
+- theme: `light`, font: `mono`, fontSize: `large`, mode: `rsvp`
 - peripheral: on, animate: on, easePunct: on
 - wpm: 300, punctMult: 1.45×, wordMult: 0.5×, periMult: 1.25×
 

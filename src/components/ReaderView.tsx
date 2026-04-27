@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react'
 import type { Token } from '@/lib/tokenize'
+import type { ReadMode } from '@/types'
 import { WordDisplay } from './WordDisplay'
 import { PeripheralContext } from './PeripheralContext'
 import { ContextView } from './ContextView'
@@ -18,6 +19,7 @@ interface ReaderViewProps {
   periMult: number
   punctMult: number
   easePunct: boolean
+  mode: ReadMode
   onToggle: () => void
   onNudge: (d: number) => void
   onSeek: (i: number) => void
@@ -37,12 +39,16 @@ export function ReaderView({
   periMult,
   punctMult,
   easePunct,
+  mode,
   onToggle,
   onNudge,
   onSeek,
   flashBar,
   chromeVisible,
 }: ReaderViewProps) {
+  const isWordMode = mode === 'rsvp' && playing
+  const contextFlow: 'paused' | 'playing' =
+    mode === 'guided' && playing ? 'playing' : 'paused'
   const rootRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
 
@@ -107,7 +113,7 @@ export function ReaderView({
       onTouchEnd={onTouchEnd}
     >
       <div className="reader-inner" ref={innerRef}>
-        {playing ? (
+        {isWordMode ? (
           <>
             <div className="anchor-guide" aria-hidden="true">
               <div className="anchor-tick anchor-top" />
@@ -132,7 +138,12 @@ export function ReaderView({
             )}
           </>
         ) : (
-          <ContextView tokens={tokens} index={index} onSeek={onSeek} />
+          <ContextView
+            tokens={tokens}
+            index={index}
+            onSeek={onSeek}
+            flow={contextFlow}
+          />
         )}
 
         {!playing && (

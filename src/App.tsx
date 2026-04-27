@@ -49,6 +49,9 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute("data-font", settings.font);
   }, [settings.font]);
+  useEffect(() => {
+    document.documentElement.setAttribute("data-font-size", settings.fontSize);
+  }, [settings.fontSize]);
 
   useAmbientAudio({
     enabled: settings.audioEnabled,
@@ -306,6 +309,7 @@ function App() {
           periMult={settings.periMult ?? 1}
           punctMult={settings.punctMult ?? 1}
           easePunct={settings.easePunct !== false}
+          mode={settings.mode}
           onToggle={toggle}
           onNudge={nudge}
           onSeek={seek}

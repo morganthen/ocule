@@ -1,5 +1,7 @@
 export type AudioTrack = 'noise' | 'rain' | 'binaural' | 'forest'
 
+export type ReadMode = 'rsvp' | 'guided'
+
 export interface Settings {
   theme: 'dark' | 'light'
   peripheral: boolean
@@ -14,6 +16,7 @@ export interface Settings {
   audioEnabled: boolean
   audioTrack: AudioTrack
   audioVolume: number
+  mode: ReadMode
 }
 
 export interface Session {
@@ -37,4 +40,5 @@ export const DEFAULT_SETTINGS: Settings = {
   audioEnabled: false,
   audioTrack: 'rain',
   audioVolume: 0.4,
+  mode: 'rsvp',
 }
