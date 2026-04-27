@@ -85,9 +85,10 @@ src/
 ## Defaults for first-time visitors
 
 In `src/types.ts > DEFAULT_SETTINGS`:
-- theme: `light`, font: `mono`, fontSize: `large`, mode: `rsvp`
+- theme: `dark`, font: `mono`, fontSize: `medium`, mode: `rsvp`
 - peripheral: on, animate: on, easePunct: on
-- wpm: 300, punctMult: 1.45×, wordMult: 0.5×, periMult: 1.25×
+- wpm: 300, punctMult: 1.1×, wordMult: 0.8×, periMult: 1.25×
+- audio: off, track: `rain`, volume: 0.4
 
 To preview defaults in a tab that already has stored settings: `localStorage.removeItem('rsvp.settings')` then refresh.
 

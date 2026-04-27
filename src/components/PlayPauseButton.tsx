@@ -22,7 +22,7 @@ export function PlayPauseButton({
       <button
         className="transport-btn transport-side"
         onClick={onRewind}
-        aria-label="Rewind ten words"
+        aria-label="Rewind fifteen words"
         type="button"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -50,7 +50,7 @@ export function PlayPauseButton({
       <button
         className="transport-btn transport-side"
         onClick={onForward}
-        aria-label="Forward ten words"
+        aria-label="Forward fifteen words"
         type="button"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">

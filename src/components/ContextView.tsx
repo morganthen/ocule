@@ -55,10 +55,13 @@ export function ContextView({
     if (firstRunRef.current || outOfZone) {
       const target =
         el.offsetTop - c.clientHeight * anchorRatio + el.offsetHeight / 2
-      c.scrollTo({
-        top: target,
-        behavior: firstRunRef.current ? 'auto' : 'smooth',
-      })
+      // Paused flow is driven by user input (scrubbing, arrow nudges) — those
+      // can fire many events per second, and queued smooth scrolls cancel each
+      // other and jitter. Use instant scrolls there. Playing flow (rAF-driven
+      // word ticks) is slow enough that smooth scroll never gets interrupted.
+      const behavior: ScrollBehavior =
+        firstRunRef.current || flow === 'paused' ? 'auto' : 'smooth'
+      c.scrollTo({ top: target, behavior })
       firstRunRef.current = false
     }
   }, [index, paragraphs, flow])

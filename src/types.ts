@@ -27,15 +27,15 @@ export interface Session {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  theme: 'light',
+  theme: 'dark',
   peripheral: true,
-  fontSize: 'large',
+  fontSize: 'medium',
   font: 'mono',
   animate: true,
   easePunct: true,
   wpm: 300,
-  punctMult: 1.45,
-  wordMult: 0.5,
+  punctMult: 1.1,
+  wordMult: 0.8,
   periMult: 1.25,
   audioEnabled: false,
   audioTrack: 'rain',

@@ -144,7 +144,7 @@ function App() {
         } else if (playingRef.current) {
           const now = Date.now();
           if (now - lastLeftRef.current < 400) {
-            seek(index - 10);
+            seek(index - 15);
             play();
             setFlashBar(true);
             setTimeout(() => setFlashBar(false), 450);
@@ -168,7 +168,7 @@ function App() {
         } else if (playingRef.current) {
           const now = Date.now();
           if (now - lastRightRef.current < 400) {
-            seek(index + 10);
+            seek(index + 15);
             play();
             setFlashBar(true);
             setTimeout(() => setFlashBar(false), 450);
@@ -280,8 +280,8 @@ function App() {
         <PlayPauseButton
           playing={playing}
           onToggle={toggle}
-          onRewind={() => jumpBy(-10)}
-          onForward={() => jumpBy(10)}
+          onRewind={() => jumpBy(-15)}
+          onForward={() => jumpBy(15)}
           visible={true}
         />
       )}

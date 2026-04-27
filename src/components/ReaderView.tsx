@@ -156,7 +156,12 @@ export function ReaderView({
       </div>
 
       <div className={'esc-hint ' + (chromeVisible ? 'show' : '')}>
-        <span>esc</span> to exit
+        <div className="esc-hint-row">
+          <span>←</span><span>→</span> step · double-tap to jump 15
+        </div>
+        <div className="esc-hint-row">
+          <span>esc</span> to exit
+        </div>
       </div>
 
       <ProgressBar
