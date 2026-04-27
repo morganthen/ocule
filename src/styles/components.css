@@ -43,6 +43,7 @@
   color: var(--text);
   border: none;
   border-bottom: 1px solid var(--rule);
+  border-radius: 6px;
   outline: none;
   resize: none;
   padding: 24px 22px 26px;
@@ -50,7 +51,7 @@
   line-height: 1.7;
   letter-spacing: 0.005em;
   caret-color: var(--orp);
-  transition: border-color 150ms var(--ease);
+  transition: border-color 150ms var(--ease), box-shadow 200ms var(--ease);
   font-family: inherit;
   scrollbar-width: thin;
   scrollbar-color: var(--rule) transparent;
