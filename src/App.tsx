@@ -84,8 +84,22 @@ function App() {
     pause();
   }, [text, index, wpm, setSession, pause]);
 
-  const lastSpaceRef = useRef(0);
+  const jumpBy = useCallback(
+    (delta: number) => {
+      seek(index + delta);
+      setFlashBar(true);
+      setTimeout(() => setFlashBar(false), 450);
+    },
+    [seek, index],
+  );
+
+  const lastLeftRef = useRef(0);
+  const lastRightRef = useRef(0);
   const scrubDirRef = useRef(0);
+  const playingRef = useRef(playing);
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   useEffect(() => {
     let raf = 0;
@@ -110,17 +124,7 @@ function App() {
 
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
-        const now = Date.now();
-        if (now - lastSpaceRef.current < 400) {
-          seek(index - 10);
-          play();
-          setFlashBar(true);
-          setTimeout(() => setFlashBar(false), 450);
-          lastSpaceRef.current = 0;
-        } else {
-          toggle();
-          lastSpaceRef.current = now;
-        }
+        toggle();
         return;
       }
       if (e.key === "Escape") {
@@ -134,6 +138,18 @@ function App() {
             scrubDirRef.current = -1;
             raf = requestAnimationFrame(tick);
           }
+        } else if (playingRef.current) {
+          const now = Date.now();
+          if (now - lastLeftRef.current < 400) {
+            seek(index - 10);
+            play();
+            setFlashBar(true);
+            setTimeout(() => setFlashBar(false), 450);
+            lastLeftRef.current = 0;
+          } else {
+            nudge(-1);
+            lastLeftRef.current = now;
+          }
         } else {
           nudge(-1);
         }
@@ -145,6 +161,18 @@ function App() {
           if (scrubDirRef.current !== 1) {
             scrubDirRef.current = 1;
             raf = requestAnimationFrame(tick);
+          }
+        } else if (playingRef.current) {
+          const now = Date.now();
+          if (now - lastRightRef.current < 400) {
+            seek(index + 10);
+            play();
+            setFlashBar(true);
+            setTimeout(() => setFlashBar(false), 450);
+            lastRightRef.current = 0;
+          } else {
+            nudge(1);
+            lastRightRef.current = now;
           }
         } else {
           nudge(1);
@@ -249,6 +277,8 @@ function App() {
         <PlayPauseButton
           playing={playing}
           onToggle={toggle}
+          onRewind={() => jumpBy(-10)}
+          onForward={() => jumpBy(10)}
           visible={!playing || chromeVisible}
         />
       )}

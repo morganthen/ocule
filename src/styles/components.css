@@ -45,13 +45,36 @@
   border-bottom: 1px solid var(--rule);
   outline: none;
   resize: none;
-  padding: 12px 0 14px;
+  padding: 24px 22px 26px;
   font-size: 15px;
   line-height: 1.7;
   letter-spacing: 0.005em;
   caret-color: var(--orp);
   transition: border-color 150ms var(--ease);
   font-family: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.paste-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+.paste-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.paste-textarea::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border-radius: 3px;
+  transition: background 150ms var(--ease);
+}
+.paste-textarea:hover {
+  scrollbar-color: var(--text-faded) transparent;
+}
+.paste-textarea:hover::-webkit-scrollbar-thumb {
+  background: var(--text-faded);
+}
+.paste-textarea::-webkit-scrollbar-thumb:hover,
+.paste-textarea::-webkit-scrollbar-thumb:active {
+  background: var(--text-dim);
 }
 .paste-textarea:focus {
   border-bottom-color: var(--text-dim);
@@ -275,6 +298,74 @@
   pointer-events: none;
 }
 .paused-hint.show { opacity: 1; }
+
+/* Paused-state context: full text shown around the active token, with the
+   active word highlighted. Scrub bar drives the highlight; the view
+   auto-recenters when the active word drifts toward the fade zone. */
+.context-view {
+  position: absolute;
+  left: 50%;
+  top: 14vh;
+  bottom: calc(60% - 110px);
+  transform: translateX(-50%);
+  width: min(64ch, 88vw);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.85;
+  color: var(--text-dim);
+  letter-spacing: 0.005em;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  scrollbar-width: none;
+  animation: context-fade 240ms var(--ease);
+  cursor: default;
+}
+.context-view::-webkit-scrollbar { display: none; }
+
+@keyframes context-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.context-inner {
+  padding-top: 30vh;
+  padding-bottom: 30vh;
+}
+
+.context-para {
+  margin: 0 0 1.4em 0;
+}
+.context-para:last-child { margin-bottom: 0; }
+
+.context-token {
+  transition:
+    color 220ms var(--ease),
+    background 220ms var(--ease);
+  border-radius: 2px;
+  padding: 1px 2px;
+  margin: 0 -2px;
+  cursor: pointer;
+}
+.context-token:hover {
+  color: var(--text);
+}
+.context-token.active {
+  color: var(--orp);
+  background: color-mix(in srgb, var(--orp) 14%, transparent);
+}
 
 /* Scrubbable position bar — sits just beneath the paused-hint.
    Invisible during playback, accent-colored and draggable when paused. */
@@ -580,32 +671,47 @@
   opacity: 1;
 }
 
-/* ─── Play/pause button (bottom-center of reader) ────────────────────────── */
-.playpause {
+/* ─── Transport cluster (rewind · play/pause · forward) ──────────────────── */
+.transport {
   position: fixed;
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9;
-  width: 48px;
-  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  transition: opacity 300ms var(--ease);
+  pointer-events: none;
+}
+.transport.visible {
+  opacity: 0.9;
+  pointer-events: auto;
+}
+
+.transport-btn {
   display: grid;
   place-items: center;
   color: var(--text-faded);
   background: var(--bg-elevated);
   border: 1px solid var(--rule);
   border-radius: 999px;
-  opacity: 0;
-  transition: opacity 300ms var(--ease), color 150ms var(--ease), border-color 150ms var(--ease), transform 150ms var(--ease);
   cursor: pointer;
+  transition:
+    color 150ms var(--ease),
+    border-color 150ms var(--ease),
+    opacity 150ms var(--ease),
+    transform 120ms var(--ease);
 }
-.playpause.visible { opacity: 0.85; }
-.playpause:hover {
+.transport-btn:hover {
   color: var(--text);
   border-color: var(--text-faded);
   opacity: 1;
 }
-.playpause:active { transform: translateX(-50%) scale(0.96); }
+.transport-btn:active { transform: scale(0.94); }
+.transport-main { width: 48px; height: 48px; }
+.transport-side { width: 36px; height: 36px; }
 
 /* ─── Settings popover ───────────────────────────────────────────────────── */
 .settings-pop {
@@ -994,5 +1100,14 @@
   .anchor-bottom { top:  3.5em; }
   .esc-hint { display: none; }
   .back-btn { left: 16px; width: 40px; height: 40px; }
-  .playpause { bottom: 56px; width: 56px; height: 56px; }
+  .transport { bottom: 56px; gap: 12px; }
+  .transport-main { width: 56px; height: 56px; }
+  .transport-side { width: 42px; height: 42px; }
+  .context-view {
+    top: 10vh;
+    bottom: calc(60% - 90px);
+    width: 92vw;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
 }

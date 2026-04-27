@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import type { Token } from '@/lib/tokenize'
 import { WordDisplay } from './WordDisplay'
 import { PeripheralContext } from './PeripheralContext'
+import { ContextView } from './ContextView'
 import { ProgressBar } from './ProgressBar'
 import { ScrubBar } from './ScrubBar'
 
@@ -106,26 +107,32 @@ export function ReaderView({
       onTouchEnd={onTouchEnd}
     >
       <div className="reader-inner" ref={innerRef}>
-        <div className="anchor-guide" aria-hidden="true">
-          <div className="anchor-tick anchor-top" />
-          <div className="anchor-tick anchor-bottom" />
-        </div>
+        {playing ? (
+          <>
+            <div className="anchor-guide" aria-hidden="true">
+              <div className="anchor-tick anchor-top" />
+              <div className="anchor-tick anchor-bottom" />
+            </div>
 
-        {peripheral && (
-          <PeripheralContext
-            prev={prevTok && prevTok.word}
-            next={nextTok && nextTok.word}
-            periMult={periMult}
-          />
-        )}
+            {peripheral && (
+              <PeripheralContext
+                prev={prevTok && prevTok.word}
+                next={nextTok && nextTok.word}
+                periMult={periMult}
+              />
+            )}
 
-        {tok && (
-          <WordDisplay
-            word={tok.word}
-            fontSize={fontSizePx}
-            onMeasure={handleMeasure}
-            animate={animate}
-          />
+            {tok && (
+              <WordDisplay
+                word={tok.word}
+                fontSize={fontSizePx}
+                onMeasure={handleMeasure}
+                animate={animate}
+              />
+            )}
+          </>
+        ) : (
+          <ContextView tokens={tokens} index={index} onSeek={onSeek} />
         )}
 
         {!playing && (
