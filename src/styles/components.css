@@ -1386,6 +1386,26 @@
   color: currentColor;
   transition: color 120ms var(--ease);
 }
+.about-link-soon {
+  opacity: 0.55;
+  cursor: default;
+}
+.about-link-soon:hover {
+  color: var(--text-dim);
+  border-color: var(--rule);
+  opacity: 0.7;
+}
+.about-link-soon-tag {
+  margin-left: 4px;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orp);
+  border: 1px solid color-mix(in oklab, var(--orp) 40%, transparent);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-weight: 400;
+}
 
 @media (max-width: 640px) {
   .about-modal { padding: 36px 24px 40px; }
