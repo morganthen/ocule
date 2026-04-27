@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface Resumable {
   nextWord: string
@@ -53,6 +59,7 @@ export function PasteView({
   }, [text, onStart])
 
   const canStart = text.trim().length > 0
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   return (
     <div className="paste-view">
@@ -94,29 +101,60 @@ export function PasteView({
             <span className="resume-preview">"{resumable.nextWord}"</span>
             <span className="resume-pct"> · {resumable.pct}% read</span>
             <div className="resume-actions">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onResume()
-                }}
+              <button
+                type="button"
+                className="resume-btn"
+                onClick={onResume}
               >
                 resume
-              </a>
-              <span className="resume-sep">·</span>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onClearResume()
-                }}
+              </button>
+              <button
+                type="button"
+                className="resume-btn resume-btn-discard"
+                onClick={() => setConfirmOpen(true)}
               >
                 start new
-              </a>
+              </button>
             </div>
           </div>
         )}
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="confirm-modal">
+          <DialogTitle>Discard saved reading?</DialogTitle>
+          <DialogDescription>
+            Confirm clearing your saved reading position before starting new.
+          </DialogDescription>
+          <div className="confirm-body">
+            <h3>discard saved reading?</h3>
+            <p>
+              {resumable
+                ? `you've read ${resumable.pct}% of the previous text. starting new will clear it from this browser.`
+                : `this will clear your saved reading from this browser.`}
+            </p>
+          </div>
+          <div className="confirm-actions">
+            <button
+              type="button"
+              className="confirm-btn confirm-cancel"
+              onClick={() => setConfirmOpen(false)}
+            >
+              cancel
+            </button>
+            <button
+              type="button"
+              className="confirm-btn confirm-discard"
+              onClick={() => {
+                setConfirmOpen(false)
+                onClearResume()
+              }}
+            >
+              discard
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -39,6 +39,15 @@ function App() {
   const [text, setText] = useState("");
   const [flashBar, setFlashBar] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  // Holds an incoming URL handoff article when the user already has a saved
+  // session, so PasteView can offer them the choice between the two.
+  // Read synchronously on mount so PasteView sees it on first render.
+  const [pendingHandoff, setPendingHandoff] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    const params = new URLSearchParams(window.location.search);
+    const incoming = params.get("text");
+    return incoming && incoming.trim() ? incoming : null;
+  });
 
   const wpm = settings.wpm;
   const setWpm = (v: number) => setSettings({ ...settings, wpm: v });
@@ -233,6 +242,26 @@ function App() {
     [seek, setSession, wpm, play],
   );
 
+  // Strip the `?text=` param from the URL once we've consumed it, and
+  // auto-start the reader if there's no session to compete with. When a
+  // session is present, pendingHandoff stays set so PasteView can show the
+  // incoming article alongside a resume option.
+  const onStartRef = useRef(onStart);
+  useEffect(() => {
+    onStartRef.current = onStart;
+  }, [onStart]);
+  useEffect(() => {
+    if (!pendingHandoff) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("text");
+    window.history.replaceState({}, "", url.toString());
+    if (!(session && session.text)) {
+      onStartRef.current(pendingHandoff);
+      setPendingHandoff(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onResume = useCallback(() => {
     if (!session) return;
     setText(session.text);
@@ -289,11 +318,19 @@ function App() {
 
       {view === "paste" && (
         <PasteView
-          onStart={onStart}
+          onStart={(t) => {
+            setPendingHandoff(null);
+            onStart(t);
+          }}
           resumable={resumable}
-          onResume={onResume}
+          onResume={() => {
+            setPendingHandoff(null);
+            onResume();
+          }}
           onClearResume={onClearResume}
-          initialText={session && session.text ? session.text : ""}
+          initialText={
+            pendingHandoff ?? (session && session.text ? session.text : "")
+          }
         />
       )}
       {view === "reader" && (
