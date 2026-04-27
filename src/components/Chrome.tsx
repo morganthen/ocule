@@ -47,9 +47,35 @@ export function Chrome({ visible, wpm, setWpm, settings, setSettings }: ChromePr
         <div className="wpm-display">
           <span className="wpm">{wpm}</span>
           <span className="wpm-unit">wpm</span>
+          {settings.mode === 'guided' && (
+            <span className="wpm-mode-tag">· guided</span>
+          )}
         </div>
 
         <div className="wpm-panel" aria-hidden={!wpmHover}>
+          <div className="cs-row">
+            <div className="cs-head">
+              <span className="cs-label">mode</span>
+            </div>
+            <div className="seg mode-seg">
+              <button
+                type="button"
+                tabIndex={wpmHover ? 0 : -1}
+                className={settings.mode === 'rsvp' ? 'on' : ''}
+                onClick={() => setSettings({ ...settings, mode: 'rsvp' })}
+              >
+                rsvp
+              </button>
+              <button
+                type="button"
+                tabIndex={wpmHover ? 0 : -1}
+                className={settings.mode === 'guided' ? 'on' : ''}
+                onClick={() => setSettings({ ...settings, mode: 'guided' })}
+              >
+                guided
+              </button>
+            </div>
+          </div>
           <ChromeSlider
             label="speed"
             unit="wpm"
@@ -72,26 +98,30 @@ export function Chrome({ visible, wpm, setWpm, settings, setSettings }: ChromePr
             display={punct.toFixed(2) + '×'}
             invert
           />
-          <ChromeSlider
-            label="word size"
-            min={0.5}
-            max={2}
-            step={0.05}
-            value={wordMult}
-            onChange={(v) => setSettings({ ...settings, wordMult: v })}
-            tabbable={wpmHover}
-            display={wordMult.toFixed(2) + '×'}
-          />
-          <ChromeSlider
-            label="peripheral size"
-            min={0.5}
-            max={2.5}
-            step={0.05}
-            value={periMult}
-            onChange={(v) => setSettings({ ...settings, periMult: v })}
-            tabbable={wpmHover}
-            display={periMult.toFixed(2) + '×'}
-          />
+          {settings.mode === 'rsvp' && (
+            <>
+              <ChromeSlider
+                label="word size"
+                min={0.5}
+                max={2}
+                step={0.05}
+                value={wordMult}
+                onChange={(v) => setSettings({ ...settings, wordMult: v })}
+                tabbable={wpmHover}
+                display={wordMult.toFixed(2) + '×'}
+              />
+              <ChromeSlider
+                label="peripheral size"
+                min={0.5}
+                max={2.5}
+                step={0.05}
+                value={periMult}
+                onChange={(v) => setSettings({ ...settings, periMult: v })}
+                tabbable={wpmHover}
+                display={periMult.toFixed(2) + '×'}
+              />
+            </>
+          )}
         </div>
       </div>
 

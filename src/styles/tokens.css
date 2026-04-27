@@ -39,6 +39,10 @@
 :root[data-font="humanist"] { --font-app: var(--font-humanist); }
 :root[data-font="dyslexic"] { --font-app: var(--font-dyslexic); }
 
+:root[data-font-size="small"]  { --context-text-size: clamp(0.8rem,  0.95vw, 0.95rem); }
+:root[data-font-size="medium"] { --context-text-size: clamp(1.05rem, 1.5vw,  1.25rem); }
+:root[data-font-size="large"]  { --context-text-size: clamp(1.4rem,  2.4vw,  1.85rem); }
+
 @font-face {
   font-family: "Monaspace Xenon";
   src: url("https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceXenon-Regular.woff2") format("woff2");

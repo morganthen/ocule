@@ -310,8 +310,8 @@
   transform: translateX(-50%);
   width: min(64ch, 88vw);
   overflow-y: auto;
-  font-family: var(--font-mono);
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-family: var(--font-app);
+  font-size: var(--context-text-size, clamp(0.95rem, 1.4vw, 1.15rem));
   line-height: 1.85;
   color: var(--text-dim);
   letter-spacing: 0.005em;
@@ -332,6 +332,31 @@
   scrollbar-width: none;
   animation: context-fade 240ms var(--ease);
   cursor: default;
+  transition:
+    -webkit-mask-image 280ms var(--ease),
+    mask-image 280ms var(--ease);
+}
+/* Guided playback: text above the highlight is "already read" — fade more
+   aggressively at the top so it dissolves as it scrolls upward. */
+.context-view.context-playing {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.15) 18%,
+    rgba(0,0,0,0.55) 38%,
+    black 58%,
+    black 92%,
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.15) 18%,
+    rgba(0,0,0,0.55) 38%,
+    black 58%,
+    black 92%,
+    transparent 100%
+  );
 }
 .context-view::-webkit-scrollbar { display: none; }
 
@@ -540,6 +565,24 @@
   color: var(--text-faded);
   font-size: 11px;
   text-transform: lowercase;
+  letter-spacing: 0.12em;
+}
+.chrome-tl .wpm-mode-tag {
+  margin-left: 6px;
+  color: var(--orp);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.mode-seg {
+  width: 100%;
+}
+.mode-seg button {
+  flex: 1;
+  padding: 5px 10px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -1106,7 +1149,6 @@
     top: 10vh;
     bottom: calc(60% - 90px);
     width: 92vw;
-    font-size: 0.95rem;
     line-height: 1.75;
   }
 }

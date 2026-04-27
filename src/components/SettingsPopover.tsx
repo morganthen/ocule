@@ -68,22 +68,26 @@ export function SettingsPopover({ settings, setSettings }: SettingsPopoverProps)
           display={Math.round(audioVolume * 100) + '%'}
         />
       </div>
-      <div className="settings-row">
-        <label>Peripheral context</label>
-        <Switch
-          checked={peripheral}
-          onCheckedChange={(v) => setSettings({ ...settings, peripheral: v })}
-          aria-label="Peripheral context"
-        />
-      </div>
-      <div className="settings-row">
-        <label>Word animation</label>
-        <Switch
-          checked={!!animate}
-          onCheckedChange={(v) => setSettings({ ...settings, animate: v })}
-          aria-label="Word animation"
-        />
-      </div>
+      {settings.mode === 'rsvp' && (
+        <>
+          <div className="settings-row">
+            <label>Peripheral context</label>
+            <Switch
+              checked={peripheral}
+              onCheckedChange={(v) => setSettings({ ...settings, peripheral: v })}
+              aria-label="Peripheral context"
+            />
+          </div>
+          <div className="settings-row">
+            <label>Word animation</label>
+            <Switch
+              checked={!!animate}
+              onCheckedChange={(v) => setSettings({ ...settings, animate: v })}
+              aria-label="Word animation"
+            />
+          </div>
+        </>
+      )}
       <div className="settings-row">
         <label>Ease punctuation pauses</label>
         <Switch
