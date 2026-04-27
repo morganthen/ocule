@@ -148,7 +148,16 @@ export function ReaderView({
 
         {!playing && (
           <div className={'paused-hint ' + (chromeVisible ? 'show' : '')}>
-            paused · space to resume
+            paused
+            <span className="paused-hint-sep">·</span>
+            <span className="paused-hint-pct">
+              {tokens.length > 1
+                ? Math.round((index / (tokens.length - 1)) * 100)
+                : 0}
+              % read
+            </span>
+            <span className="paused-hint-sep">·</span>
+            <span className="paused-hint-key">space</span> to resume
           </div>
         )}
 

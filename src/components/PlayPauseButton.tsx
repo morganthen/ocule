@@ -4,6 +4,7 @@ interface PlayPauseButtonProps {
   onRewind: () => void
   onForward: () => void
   visible: boolean
+  pressedKey?: 'main' | 'left' | 'right' | null
 }
 
 export function PlayPauseButton({
@@ -12,7 +13,10 @@ export function PlayPauseButton({
   onRewind,
   onForward,
   visible,
+  pressedKey,
 }: PlayPauseButtonProps) {
+  const cls = (kind: 'main' | 'left' | 'right', base: string) =>
+    base + (pressedKey === kind ? ' pressed' : '')
   return (
     <div
       className={'transport ' + (visible ? 'visible' : 'hidden')}
@@ -20,7 +24,7 @@ export function PlayPauseButton({
       aria-label="Reader transport"
     >
       <button
-        className="transport-btn transport-side"
+        className={cls('left', 'transport-btn transport-side')}
         onClick={onRewind}
         aria-label="Rewind fifteen words"
         type="button"
@@ -31,7 +35,7 @@ export function PlayPauseButton({
         </svg>
       </button>
       <button
-        className="transport-btn transport-main"
+        className={cls('main', 'transport-btn transport-main')}
         onClick={onToggle}
         aria-label={playing ? 'Pause' : 'Play'}
         type="button"
@@ -48,7 +52,7 @@ export function PlayPauseButton({
         )}
       </button>
       <button
-        className="transport-btn transport-side"
+        className={cls('right', 'transport-btn transport-side')}
         onClick={onForward}
         aria-label="Forward fifteen words"
         type="button"

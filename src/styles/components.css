@@ -383,6 +383,22 @@
   pointer-events: none;
 }
 .paused-hint.show { opacity: 1; }
+.paused-hint-sep {
+  margin: 0 8px;
+  color: var(--text-faded);
+  opacity: 0.6;
+}
+.paused-hint-pct {
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.paused-hint-key {
+  color: var(--text-dim);
+  border: 1px solid var(--rule);
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 4px;
+}
 
 /* Paused-state context: full text shown around the active token, with the
    active word highlighted. Scrub bar drives the highlight; the view
@@ -836,6 +852,14 @@
   opacity: 1;
 }
 .transport-btn:active { transform: scale(0.94); }
+.transport-btn.pressed {
+  animation: transport-press 200ms var(--ease);
+}
+@keyframes transport-press {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
 .transport-main { width: 60px; height: 60px; }
 .transport-side { width: 46px; height: 46px; }
 .transport-main svg { width: 20px; height: 20px; }
@@ -999,6 +1023,19 @@
 .audio-block.disabled {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.settings-soon {
+  margin-left: 8px;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orp);
+  border: 1px solid color-mix(in oklab, var(--orp) 40%, transparent);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 400;
+  vertical-align: middle;
 }
 
 .font-opt-mono     .font-opt-sample,
@@ -1198,7 +1235,6 @@
 .about-link {
   border: 1px solid var(--rule);
   padding: 14px 12px;
-  text-align: center;
   font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--text-dim);
@@ -1206,11 +1242,19 @@
   transition: all 120ms var(--ease);
   background: transparent;
   cursor: pointer;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 .about-link:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+.about-link-icon {
+  flex-shrink: 0;
+  color: currentColor;
+  transition: color 120ms var(--ease);
 }
 
 @media (max-width: 640px) {

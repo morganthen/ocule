@@ -78,8 +78,10 @@ function App() {
     document.documentElement.setAttribute("data-font-size", settings.fontSize);
   }, [settings.fontSize]);
 
+  // Audio is "coming soon" — force-disable regardless of stored settings
+  // so the hook doesn't try to fetch missing mp3 files.
   useAmbientAudio({
-    enabled: settings.audioEnabled,
+    enabled: false,
     track: settings.audioTrack,
     volume: settings.audioVolume,
   });
@@ -129,6 +131,20 @@ function App() {
     playingRef.current = playing;
   }, [playing]);
 
+  // Visual feedback when a transport keyboard shortcut fires — pulses the
+  // matching transport button. Uses a null-then-rAF gap so consecutive
+  // presses retrigger the CSS animation instead of merging into one.
+  const [pressedKey, setPressedKey] = useState<"main" | "left" | "right" | null>(
+    null,
+  );
+  const pressTimerRef = useRef<number | null>(null);
+  const triggerPress = useCallback((kind: "main" | "left" | "right") => {
+    setPressedKey(null);
+    requestAnimationFrame(() => setPressedKey(kind));
+    if (pressTimerRef.current) window.clearTimeout(pressTimerRef.current);
+    pressTimerRef.current = window.setTimeout(() => setPressedKey(null), 200);
+  }, []);
+
   useEffect(() => {
     let raf = 0;
     let last = 0;
@@ -153,6 +169,7 @@ function App() {
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
         toggle();
+        triggerPress("main");
         return;
       }
       if (e.key === "Escape") {
@@ -161,6 +178,7 @@ function App() {
       }
       if (e.key === "ArrowLeft") {
         e.preventDefault();
+        triggerPress("left");
         if (e.repeat) {
           if (scrubDirRef.current !== -1) {
             scrubDirRef.current = -1;
@@ -185,6 +203,7 @@ function App() {
       }
       if (e.key === "ArrowRight") {
         e.preventDefault();
+        triggerPress("right");
         if (e.repeat) {
           if (scrubDirRef.current !== 1) {
             scrubDirRef.current = 1;
@@ -379,6 +398,7 @@ function App() {
           onRewind={() => jumpBy(-15)}
           onForward={() => jumpBy(15)}
           visible={true}
+          pressedKey={pressedKey}
         />
       )}
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
