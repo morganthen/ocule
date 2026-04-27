@@ -106,7 +106,8 @@ To preview defaults in a tab that already has stored settings: `localStorage.rem
 ## Reference docs in this repo
 
 - `docs/PRD.md` — full PRD (context, locked decisions, design system, technical plan, verification, original Claude Design handoff prompt)
-- `docs/design-chat.md` — the full conversation between the user and Claude Design that produced the original prototype. Read this for design intent and iteration history.
+- `docs/design-chat.md` — the full conversation between the user and Claude Design that produced the original prototype.
+- `docs/extension-handoff.md` — public API for the Chrome extension (and any other caller) to deliver an article. Three transports: URL `?text=` query param, `localStorage` inbox key `rsvp.inbox`, and `window.postMessage({ type: 'ocule:read', text })`. All converge on `acceptHandoff()` in `App.tsx`. Read this for design intent and iteration history.
 - `docs/claude-design-handoff-readme.md` — Claude Design's own bundle README
 
 ## V2 (not started)

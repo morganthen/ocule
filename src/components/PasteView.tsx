@@ -28,9 +28,19 @@ export function PasteView({
 }: PasteViewProps) {
   const [text, setText] = useState(initialText || '')
   const taRef = useRef<HTMLTextAreaElement>(null)
+  const lastInitialRef = useRef(initialText || '')
 
+  // Adopt new initialText whenever the parent passes a different value (e.g.
+  // a postMessage handoff arriving after mount). Don't overwrite mid-edit:
+  // only replace if the local text matches the previous initial — meaning
+  // the user hasn't typed anything new yet.
   useEffect(() => {
-    if (initialText && !text) setText(initialText)
+    const incoming = initialText || ''
+    if (incoming === lastInitialRef.current) return
+    if (text === lastInitialRef.current || !text) {
+      setText(incoming)
+    }
+    lastInitialRef.current = incoming
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialText])
 

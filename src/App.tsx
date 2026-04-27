@@ -39,14 +39,30 @@ function App() {
   const [text, setText] = useState("");
   const [flashBar, setFlashBar] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  // Holds an incoming URL handoff article when the user already has a saved
-  // session, so PasteView can offer them the choice between the two.
-  // Read synchronously on mount so PasteView sees it on first render.
+  // Holds an incoming external article (URL param, localStorage inbox, or
+  // postMessage) when the user already has a saved session, so PasteView can
+  // offer them the choice between the two. Read synchronously on mount from
+  // the two transports that exist before paint so PasteView sees them on its
+  // first render.
   const [pendingHandoff, setPendingHandoff] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
+    // URL param: ?text=...
     const params = new URLSearchParams(window.location.search);
-    const incoming = params.get("text");
-    return incoming && incoming.trim() ? incoming : null;
+    const fromUrl = params.get("text");
+    if (fromUrl && fromUrl.trim()) return fromUrl;
+    // localStorage inbox: { text, source?, ts? }
+    try {
+      const raw = window.localStorage.getItem("rsvp.inbox");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.text === "string" && parsed.text.trim()) {
+          return parsed.text;
+        }
+      }
+    } catch {
+      // ignore malformed inbox payloads
+    }
+    return null;
   });
 
   const wpm = settings.wpm;
@@ -237,30 +253,76 @@ function App() {
       seek(0);
       setSession({ text: t, index: 0, wpm, updatedAt: Date.now() });
       setView("reader");
-      setTimeout(() => play(), 300);
+      play();
     },
     [seek, setSession, wpm, play],
   );
 
-  // Strip the `?text=` param from the URL once we've consumed it, and
-  // auto-start the reader if there's no session to compete with. When a
-  // session is present, pendingHandoff stays set so PasteView can show the
-  // incoming article alongside a resume option.
+  // Single dispatcher for incoming external articles. Routes through
+  // PasteView (with the new article pre-loaded + a resume option) when a
+  // saved session exists, or auto-starts the reader otherwise. All three
+  // transports — URL param, localStorage `rsvp.inbox`, postMessage — funnel
+  // through this.
   const onStartRef = useRef(onStart);
+  const sessionRef = useRef(session);
   useEffect(() => {
     onStartRef.current = onStart;
   }, [onStart]);
   useEffect(() => {
-    if (!pendingHandoff) return;
+    sessionRef.current = session;
+  }, [session]);
+
+  const acceptHandoff = useCallback((incoming: string) => {
+    if (!incoming || !incoming.trim()) return;
+    if (sessionRef.current && sessionRef.current.text) {
+      setPendingHandoff(incoming);
+    } else {
+      onStartRef.current(incoming);
+      setPendingHandoff(null);
+    }
+  }, []);
+
+  // Mount: clear the URL param and localStorage inbox after we've captured
+  // them in the synchronous initializer, then fire the dispatcher for the
+  // no-session auto-start path.
+  useEffect(() => {
     const url = new URL(window.location.href);
-    url.searchParams.delete("text");
-    window.history.replaceState({}, "", url.toString());
-    if (!(session && session.text)) {
+    if (url.searchParams.has("text")) {
+      url.searchParams.delete("text");
+      window.history.replaceState({}, "", url.toString());
+    }
+    try {
+      window.localStorage.removeItem("rsvp.inbox");
+    } catch {
+      // ignore
+    }
+    if (pendingHandoff && !(session && session.text)) {
       onStartRef.current(pendingHandoff);
       setPendingHandoff(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // postMessage transport: extension content scripts can deliver text after
+  // load by posting `{ type: 'ocule:read', text, source? }` to window.
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      const data = e.data;
+      if (!data || typeof data !== "object") return;
+      if (data.type !== "ocule:read") return;
+      if (typeof data.text !== "string") return;
+      acceptHandoff(data.text);
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [acceptHandoff]);
+
+  // When resuming, we can't seek synchronously because tokens haven't been
+  // re-tokenized yet (setText queues the update). Stash the target index in
+  // state and let the effect below fire seek+play once the new tokens land.
+  const [pendingResumeIndex, setPendingResumeIndex] = useState<number | null>(
+    null,
+  );
 
   const onResume = useCallback(() => {
     if (!session) return;
@@ -269,12 +331,17 @@ function App() {
     // whatever speed the user was last reading.
     if (session.wpm) setSettings({ ...settings, wpm: session.wpm });
     setView("reader");
-    setTimeout(() => {
-      seek(session.index || 0);
-      play();
-    }, 60);
+    setPendingResumeIndex(session.index || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, seek, play]);
+  }, [session]);
+
+  useEffect(() => {
+    if (pendingResumeIndex == null) return;
+    if (!tokens.length) return;
+    seek(pendingResumeIndex);
+    play();
+    setPendingResumeIndex(null);
+  }, [pendingResumeIndex, tokens, seek, play]);
 
   const onClearResume = useCallback(() => {
     setSession(null);
