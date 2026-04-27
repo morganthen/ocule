@@ -674,18 +674,13 @@
 /* ─── Transport cluster (rewind · play/pause · forward) ──────────────────── */
 .transport {
   position: fixed;
-  bottom: 80px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9;
   display: flex;
   align-items: center;
-  gap: 14px;
-  opacity: 0;
-  transition: opacity 300ms var(--ease);
-  pointer-events: none;
-}
-.transport.visible {
+  gap: 18px;
   opacity: 0.9;
   pointer-events: auto;
 }
@@ -710,8 +705,10 @@
   opacity: 1;
 }
 .transport-btn:active { transform: scale(0.94); }
-.transport-main { width: 48px; height: 48px; }
-.transport-side { width: 36px; height: 36px; }
+.transport-main { width: 60px; height: 60px; }
+.transport-side { width: 46px; height: 46px; }
+.transport-main svg { width: 20px; height: 20px; }
+.transport-side svg { width: 18px; height: 18px; }
 
 /* ─── Settings popover ───────────────────────────────────────────────────── */
 .settings-pop {
@@ -1100,9 +1097,11 @@
   .anchor-bottom { top:  3.5em; }
   .esc-hint { display: none; }
   .back-btn { left: 16px; width: 40px; height: 40px; }
-  .transport { bottom: 56px; gap: 12px; }
-  .transport-main { width: 56px; height: 56px; }
-  .transport-side { width: 42px; height: 42px; }
+  .transport { bottom: 96px; gap: 16px; }
+  .transport-main { width: 68px; height: 68px; }
+  .transport-side { width: 54px; height: 54px; }
+  .transport-main svg { width: 22px; height: 22px; }
+  .transport-side svg { width: 20px; height: 20px; }
   .context-view {
     top: 10vh;
     bottom: calc(60% - 90px);

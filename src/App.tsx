@@ -279,7 +279,7 @@ function App() {
           onToggle={toggle}
           onRewind={() => jumpBy(-10)}
           onForward={() => jumpBy(10)}
-          visible={!playing || chromeVisible}
+          visible={true}
         />
       )}
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
