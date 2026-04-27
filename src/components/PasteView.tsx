@@ -82,7 +82,7 @@ export function PasteView({
           onKeyDown={handleKey}
           className="paste-textarea"
           spellCheck={false}
-          placeholder=""
+          placeholder="a news article, a long essay, a chapter from a book…"
           rows={10}
         />
         <div className="paste-actions">

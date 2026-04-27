@@ -112,8 +112,9 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
             </a>
             <a
               className="about-link"
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href="https://github.com/morganthen/ocule"
+              target="_blank"
+              rel="noreferrer"
             >
               <svg
                 className="about-link-icon"
@@ -130,6 +131,9 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
                 />
               </svg>
               Oculé on GitHub
+            </a>
+            <a className="about-link" href="/privacy">
+              Privacy
             </a>
           </div>
         </section>

@@ -89,9 +89,15 @@ function App() {
   const tokens = useMemo(() => tokenize(text), [text]);
 
   const lastSavedIdx = useRef(-1);
+  // Ephemeral readings (e.g. the "read a short sample" link) should not
+  // touch session storage — neither on tick, nor on back, nor on start.
+  // That way the user's previous resume stays intact and the sample text
+  // never ends up in the textarea.
+  const ephemeralRef = useRef(false);
 
   const handleIndexChange = useCallback(
     (i: number) => {
+      if (ephemeralRef.current) return;
       if (Math.abs(i - lastSavedIdx.current) >= 5) {
         lastSavedIdx.current = i;
         if (text) setSession({ text, index: i, wpm, updatedAt: Date.now() });
@@ -109,7 +115,10 @@ function App() {
   });
 
   const onBack = useCallback(() => {
-    setSession({ text, index, wpm, updatedAt: Date.now() });
+    if (!ephemeralRef.current) {
+      setSession({ text, index, wpm, updatedAt: Date.now() });
+    }
+    ephemeralRef.current = false;
     setView("paste");
     pause();
   }, [text, index, wpm, setSession, pause]);
@@ -267,10 +276,13 @@ function App() {
   const [chromeVisible] = useAutoHide(2000, true);
 
   const onStart = useCallback(
-    (t: string) => {
+    (t: string, opts?: { ephemeral?: boolean }) => {
+      ephemeralRef.current = !!opts?.ephemeral;
       setText(t);
       seek(0);
-      setSession({ text: t, index: 0, wpm, updatedAt: Date.now() });
+      if (!opts?.ephemeral) {
+        setSession({ text: t, index: 0, wpm, updatedAt: Date.now() });
+      }
       setView("reader");
       play();
     },
@@ -448,7 +460,7 @@ function App() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              onStart(SAMPLE_TEXT);
+              onStart(SAMPLE_TEXT, { ephemeral: true });
             }}
           >
             or read a short sample

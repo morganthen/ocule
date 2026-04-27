@@ -1099,6 +1099,135 @@
   100% { background: var(--text-dim); }
 }
 
+/* ─── Privacy page ───────────────────────────────────────────────────────── */
+.privacy {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 64px 24px 96px;
+  overflow-y: auto;
+  font-family: var(--font-app);
+  color: var(--text);
+  background: var(--bg);
+}
+
+.privacy-back {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-faded);
+  text-transform: lowercase;
+  border: none;
+  transition: color 150ms var(--ease);
+}
+.privacy-back:hover {
+  color: var(--text);
+}
+
+.privacy-doc {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text);
+  letter-spacing: 0.005em;
+  text-wrap: pretty;
+}
+
+.privacy-header {
+  margin-bottom: 36px;
+}
+.privacy-header h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.privacy-lede {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
+.privacy-section {
+  margin: 32px 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.privacy-section h2 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.privacy-doc p {
+  margin: 0 0 14px;
+}
+.privacy-doc p:last-child {
+  margin-bottom: 0;
+}
+.privacy-doc ul {
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+.privacy-doc li {
+  position: relative;
+  padding: 4px 0 4px 18px;
+}
+.privacy-doc li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 1.05em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--orp);
+  opacity: 0.6;
+}
+.privacy-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--accent);
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.privacy-doc a {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: border-color 150ms var(--ease);
+}
+.privacy-doc a:hover {
+  border-bottom-color: var(--accent);
+}
+
+.privacy-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--text-faded);
+}
+.privacy-footer p {
+  margin: 0 0 6px;
+}
+
+@media (max-width: 640px) {
+  .privacy { padding: 56px 18px 72px; }
+  .privacy-back { top: 16px; left: 16px; }
+  .privacy-header h1 { font-size: 22px; }
+  .privacy-doc { font-size: 14px; }
+}
+
 /* ─── About modal (wraps shadcn Dialog) ──────────────────────────────────── */
 .about-overlay-style {
   position: fixed;
