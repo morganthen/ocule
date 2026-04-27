@@ -274,7 +274,7 @@ function App() {
         onAboutClick={() => setAboutOpen(true)}
       />
       {view === "reader" && (
-        <BackButton onBack={onBack} visible={chromeVisible} />
+        <BackButton onBack={onBack} visible={true} />
       )}
       {view === "reader" && (
         <PlayPauseButton

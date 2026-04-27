@@ -533,8 +533,8 @@
 
 .chrome-tl {
   position: absolute;
-  top: 22px;
-  left: 24px;
+  top: 26px;
+  left: 64px;
   font-size: 12px;
   letter-spacing: 0.05em;
   color: var(--text-dim);
@@ -688,26 +688,24 @@
   background: var(--bg-elevated);
 }
 
-/* ─── Back button (left margin, aligned with reader word) ────────────────── */
+/* ─── Back button (top-left corner, always visible) ──────────────────────── */
 .back-btn {
   position: fixed;
-  top: 40%;
-  left: 28px;
-  transform: translateY(-50%);
-  z-index: 9;
-  width: 36px;
-  height: 36px;
+  top: 18px;
+  left: 18px;
+  z-index: 11;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   color: var(--text-faded);
   background: transparent;
   border: none;
   border-radius: 3px;
-  opacity: 0;
-  transition: opacity 300ms var(--ease), color 150ms var(--ease), background 150ms var(--ease);
+  opacity: 0.9;
+  transition: color 150ms var(--ease), background 150ms var(--ease);
   cursor: pointer;
 }
-.back-btn.visible { opacity: 0.9; }
 .back-btn:hover {
   color: var(--text);
   background: var(--bg-elevated);
@@ -1134,12 +1132,12 @@
 @media (max-width: 640px) {
   .paste-view { padding-top: 12vh; }
   .reader-inner { --anchor-x: 42vw; }
-  .chrome-tl { top: 16px; left: 16px; }
-  .chrome-tr { top: 12px; right: 14px; }
+  .chrome-tl { top: 23px; left: 60px; }
+  .chrome-tr { top: 16px; right: 14px; }
   .anchor-top    { top: -4.5em; }
   .anchor-bottom { top:  3.5em; }
   .esc-hint { display: none; }
-  .back-btn { left: 16px; width: 40px; height: 40px; }
+  .back-btn { top: 12px; left: 12px; width: 36px; height: 36px; }
   .transport { bottom: 96px; gap: 16px; }
   .transport-main { width: 68px; height: 68px; }
   .transport-side { width: 54px; height: 54px; }
