@@ -27,9 +27,14 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
         </button>
 
         <div className="about-donate-wrap">
-          <button className="about-donate" type="button" onClick={() => {}}>
+          <a
+            className="about-donate"
+            href="https://buymeacoffee.com/morganthen"
+            target="_blank"
+            rel="noreferrer"
+          >
             Buy me a coffee
-          </button>
+          </a>
         </div>
 
         <section className="about-section">
@@ -90,10 +95,10 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
           <h2>Links</h2>
           <div className="about-links">
             <a
-              className="about-link about-link-soon"
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              aria-disabled="true"
+              className="about-link"
+              href="https://chromewebstore.google.com/detail/bclgodpjnhmbhpchhhalfbjdogmlllno?utm_source=item-share-cb"
+              target="_blank"
+              rel="noreferrer"
             >
               <svg
                 className="about-link-icon"
@@ -110,7 +115,6 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
                 <path d="M9 3.5a2.5 2.5 0 0 1 5 0v2h3.5A1.5 1.5 0 0 1 19 7v3.5h2a2.5 2.5 0 0 1 0 5h-2V19a1.5 1.5 0 0 1-1.5 1.5H14v-2a2.5 2.5 0 0 0-5 0v2H5.5A1.5 1.5 0 0 1 4 19v-3.5H6.5a2.5 2.5 0 0 0 0-5H4V7a1.5 1.5 0 0 1 1.5-1.5H9v-2Z" />
               </svg>
               Chrome Extension
-              <span className="about-link-soon-tag">soon</span>
             </a>
             <a
               className="about-link"
