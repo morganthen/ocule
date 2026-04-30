@@ -139,6 +139,20 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
               Oculé on GitHub
             </a>
             <a className="about-link" href="/privacy">
+              <svg
+                className="about-link-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 2.5 4.5 5.5v6c0 4.4 3.1 8.4 7.5 10 4.4-1.6 7.5-5.6 7.5-10v-6L12 2.5Z" />
+              </svg>
               Privacy
             </a>
           </div>
