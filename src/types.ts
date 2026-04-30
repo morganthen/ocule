@@ -39,6 +39,6 @@ export const DEFAULT_SETTINGS: Settings = {
   periMult: 1.25,
   audioEnabled: false,
   audioTrack: 'noise',
-  audioVolume: 0.4,
+  audioVolume: 0.1,
   mode: 'rsvp',
 }
