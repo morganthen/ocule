@@ -38,7 +38,7 @@ export const DEFAULT_SETTINGS: Settings = {
   wordMult: 0.8,
   periMult: 1.25,
   audioEnabled: false,
-  audioTrack: 'rain',
+  audioTrack: 'noise',
   audioVolume: 0.4,
   mode: 'rsvp',
 }

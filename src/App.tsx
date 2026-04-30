@@ -78,10 +78,8 @@ function App() {
     document.documentElement.setAttribute("data-font-size", settings.fontSize);
   }, [settings.fontSize]);
 
-  // Audio is "coming soon" — force-disable regardless of stored settings
-  // so the hook doesn't try to fetch missing mp3 files.
   useAmbientAudio({
-    enabled: false,
+    enabled: settings.audioEnabled,
     track: settings.audioTrack,
     volume: settings.audioVolume,
   });

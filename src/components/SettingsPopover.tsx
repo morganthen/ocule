@@ -15,6 +15,7 @@ export function SettingsPopover({ settings, setSettings }: SettingsPopoverProps)
     font,
     animate,
     easePunct = true,
+    audioEnabled,
     audioTrack,
     audioVolume,
   } = settings
@@ -27,35 +28,41 @@ export function SettingsPopover({ settings, setSettings }: SettingsPopoverProps)
     { key: 'dyslexic', label: 'OpenDyslexic', sample: 'Aa', badge: 'dyslexia' },
   ]
 
-  const audioOpts: Array<{ key: AudioTrack; label: string }> = [
+  const audioOpts: Array<{ key: AudioTrack; label: string; soon?: boolean }> = [
     { key: 'noise', label: 'Noise' },
-    { key: 'rain', label: 'Rain' },
     { key: 'binaural', label: 'Binaural' },
-    { key: 'forest', label: 'Forest' },
+    { key: 'rain', label: 'Rain', soon: true },
+    { key: 'forest', label: 'Forest', soon: true },
   ]
+  const trackPlayable = audioTrack === 'noise' || audioTrack === 'binaural'
   return (
     <div className="settings-pop" onClick={(e) => e.stopPropagation()}>
       <div className="settings-row">
-        <label>
-          Audio
-          <span className="settings-soon">coming soon</span>
-        </label>
+        <label>Audio</label>
         <Switch
-          checked={false}
-          disabled
-          aria-label="Audio (coming soon)"
+          checked={audioEnabled}
+          onCheckedChange={(v) =>
+            setSettings({
+              ...settings,
+              audioEnabled: v,
+              audioTrack: v && !trackPlayable ? 'noise' : audioTrack,
+            })
+          }
+          aria-label="Audio"
         />
       </div>
-      <div className="settings-row settings-col audio-block disabled">
+      <div className={'settings-row settings-col audio-block' + (audioEnabled ? '' : ' disabled')}>
         <div className="font-list">
           {audioOpts.map((o) => (
             <button
               key={o.key}
               type="button"
-              disabled
+              disabled={o.soon}
               className={'font-opt' + (audioTrack === o.key ? ' on' : '')}
+              onClick={() => !o.soon && setSettings({ ...settings, audioTrack: o.key })}
             >
               <span className="font-opt-label">{o.label}</span>
+              {o.soon && <span className="font-opt-badge">soon</span>}
             </button>
           ))}
         </div>
@@ -65,8 +72,8 @@ export function SettingsPopover({ settings, setSettings }: SettingsPopoverProps)
           max={1}
           step={0.01}
           value={audioVolume}
-          onChange={() => {}}
-          tabbable={false}
+          onChange={(v) => setSettings({ ...settings, audioVolume: v })}
+          tabbable={audioEnabled}
           display={Math.round(audioVolume * 100) + '%'}
         />
       </div>
